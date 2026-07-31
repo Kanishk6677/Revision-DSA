@@ -1,0 +1,48 @@
+
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+xample 1:
+
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+
+
+
+class Solution {
+    public void f(int i,String digits, Map<Character,String> st,List<String> ans,StringBuilder s ){
+        if(i==digits.length()){
+           ans.add(s.toString());
+           return;
+        }
+        char ch=digits.charAt(i);
+        String word = st.get(ch);
+        for(char c : word.toCharArray()){
+            s.append(c);
+            f(i+1,digits,st,ans,s);
+            s.deleteCharAt(s.length()-1);
+        }
+    }
+    public List<String> letterCombinations(String digits) {
+        Map<Character,String> st = new HashMap<>();
+        st.put('2',"abc");
+        st.put('3',"def");
+        st.put('4',"ghi");
+        st.put('5',"jkl");
+        st.put('6',"mno");
+        st.put('7',"pqrs");
+        st.put('8',"tuv");
+        st.put('9',"wxyz");
+        List<String> ans = new ArrayList<>();
+        f(0,digits,st,ans,new StringBuilder());
+        return ans;
+
+    }
+}
+
+
+TC- 4^n*N
+Space - 4^N*N
+Stack space - O(n)- Depth of the stack
