@@ -1,0 +1,43 @@
+import java.util.* ;
+import java.io.*; 
+
+public class Solution {
+	public static int f(int i,int j,int [][]matrix,int dp[][]){
+		if(j>=matrix[0].length||j<0) return -1000000000;
+		if(i==0) return matrix[i][j];
+		if(dp[i][j]!=-1) return dp[i][j];
+		
+		int up=matrix[i][j]+f(i-1,j,matrix,dp);
+		int ld=matrix[i][j]+f(i-1,j-1,matrix,dp);
+		int rd=matrix[i][j]+f(i-1,j+1,matrix,dp);
+		return dp[i][j]= Math.max(up,Math.max(ld,rd));
+	}
+	public static int getMaxPathSum(int[][] matrix) {
+		int n = matrix.length;
+		int m = matrix[0].length;
+		int dp[][] = new int [n][m];
+		// for(int dps[]:dp){
+		// 	Arrays.fill(dps,-1);
+
+		// }
+		for(int j=0;j<m;j++){
+			dp[0][j]=matrix[0][j];
+		}
+		int maxans=Integer.MIN_VALUE;
+		for(int i=1;i<n;i++){
+			for(int j=0;j<m;j++){
+				int up=matrix[i][j]+dp[i-1][j];
+				int ld=matrix[i][j];
+				if(j-1>=0) ld+=dp[i-1][j-1]; else ld+=-1000000000;
+				int rd=matrix[i][j];
+				if(j+1<m) rd+=dp[i-1][j+1];else rd+=-1000000000;
+				dp[i][j]=Math.max(up,Math.max(rd,ld));
+			}
+		}
+		maxans=dp[n-1][0];
+		for(int j=1;j<m;j++){
+			maxans=Math.max(maxans,dp[n-1][j]);
+		}
+		return maxans;
+	}
+}
