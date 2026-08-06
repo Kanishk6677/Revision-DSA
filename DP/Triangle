@@ -1,0 +1,35 @@
+import java.util.*;
+public class Solution {
+    public static int f(int i,int j,int [][] triangle,int n,int [][]dp){
+        if(i==n-1) return triangle[i][j];
+        if(dp[i][j]!=-1) return dp[i][j];
+        int down=triangle[i][j]+ f(i+1,j,triangle,n,dp);
+        int df=triangle[i][j]+f(i+1,j+1,triangle,n,dp);
+        return dp[i][j]=Math.min(down,df);
+    }
+    public static int minimumPathSum(int[][] triangle, int n) {
+        int [][]dp=new int [n][n];
+        // for(int dps[]:dp){
+        //     Arrays.fill(dps,-1);
+        // }
+
+        // little tweak as this is triangle pattern , we need to check the pattern relation with i and j
+        // base condition
+        for(int i=0;i<n;i++){
+            dp[n-1][i]=triangle[n-1][i];
+        }
+        for(int i=n-2;i>=0;i--){
+            for(int j = i;j>=0;j--){
+                int d=triangle[i][j]+dp[i+1][j];
+                int dg=triangle[i][j]+dp[i+1][j+1];
+                dp[i][j]=Math.min(d,dg);
+            }
+        }
+
+    //    return dp[n-1][n-1]=f(0,0,triangle,n,dp);
+    return dp[0][0];
+    }
+}
+
+TC= 2^(1+2+3...n+1)- Recusrion , O(n*N)- memo and tab
+SC=Stack Space in rec in memo-stack and o(n^2)
