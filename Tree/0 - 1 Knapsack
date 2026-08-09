@@ -1,0 +1,39 @@
+import java.util.* ;
+import java.io.*; 
+
+public class Solution{
+
+    static int f(int idx,int maxWeight,int []weight,int []value,int dp[][]){
+        //if(maxWeight==0) return  value[idx];
+        if(idx==0) return weight[0]<=maxWeight?value[0]:0;
+        if(dp[idx][maxWeight]!=-1) return dp[idx][maxWeight];
+        int pick =Integer.MIN_VALUE;
+        if(weight[idx]<=maxWeight) pick = value[idx]+f(idx-1,maxWeight-weight[idx],weight,value,dp);
+        int np=f(idx-1,maxWeight,weight,value,dp)+0;
+        return dp[idx][maxWeight]=Math.max(pick,np);
+    }
+    static int knapsack(int[] weight, int[] value, int n, int maxWeight) {
+        int dp[][]=new int [n][maxWeight+1];
+        // for(int dps[]:dp){
+        //     Arrays.fill(dps,-1);
+        // }
+        for(int i=weight[0];i<=maxWeight;i++){
+            dp[0][i]=value[0];
+        }
+        for(int i=1;i<n;i++){
+            for(int j=0;j<=maxWeight;j++){
+                
+                    int pick =Integer.MIN_VALUE;
+                if(weight[i]<=j) pick = value[i]+dp[i-1][j-weight[i]];
+                int np=dp[i-1][j];
+                dp[i][j]=Math.max(pick,np);
+                
+                
+
+            }
+        }
+
+    return dp[n-1][maxWeight];
+
+    }
+}
