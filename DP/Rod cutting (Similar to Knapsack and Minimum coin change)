@@ -1,0 +1,34 @@
+import java.util.*;
+public class Solution {
+	public static int f(int idx,int n,int []price,int [][]dp){
+		if(idx==0){
+			return n*price[0];
+		}
+		if(dp[idx][n]!=-1) return dp[idx][n];
+		int notPick=f(idx-1,n,price,dp);
+		int pick=Integer.MIN_VALUE;
+		int rodlength=idx+1;
+		if(rodlength<=n)pick=price[idx]+f(idx,n-rodlength,price,dp);
+		return dp[idx][n]=Math.max(pick,notPick);
+	}
+	public static int cutRod(int price[], int n) {
+		int dp[][]=new int [n][n+1];
+		// for(int dps[]:dp){
+		// 	Arrays.fill(dps,-1);
+		// }
+		for(int i=0;i<=n;i++){
+			dp[0][i]=price[0]*i;
+		}
+		for(int i=1;i<n;i++){
+			for(int j=1;j<=n;j++){
+				int notPick=dp[i-1][j];
+				int rodLength=i+1;
+				int pick=Integer.MIN_VALUE;
+				if(rodLength<=j) pick=price[i]+dp[i][j-rodLength];
+				dp[i][j]=Math.max(pick,notPick);
+			}
+		}
+
+		return dp[n-1][n];
+	}
+}
