@@ -1,0 +1,46 @@
+/*********************************************************
+
+ Following is the TreeNode structure:
+
+ class TreeNode {
+     int data;
+     TreeNode left;
+     TreeNode right;
+     TreeNode() {
+         this.data = 0;
+         this.left = null;
+         this.right = null;
+     }
+     TreeNode(int data) {
+         this.data = data;
+         this.left = null;
+         this.right = null;
+     }
+     TreeNode(int data, TreeNode left, TreeNode right) {
+         this.data = data;
+         this.left = left;
+         this.right = right;
+     }
+ };
+ ********************************************************/
+import java.util.*;
+public class Solution {
+    public static TreeNode buildBinaryTree(int[] inorder, int[] preorder) {
+        Map<Integer,Integer> mp = new HashMap<>();
+        for(int i=0;i<inorder.length;i++){
+            mp.put(inorder[i],i);
+        }
+        TreeNode node=buildTree(inorder,0,inorder.length-1,preorder,0,preorder.length-1,mp);
+        return node;
+    }
+    public static TreeNode buildTree(int[] inorder,int inStart,int inEnd,int preorder[],int preStart,int preEnd,Map<Integer,Integer>mp){
+        if(inStart>inEnd || preStart>preEnd) return null;
+        TreeNode node = new TreeNode(preorder[preStart]);
+        int inRoot= mp.get(node.data);
+        int numLeft=inRoot-inStart;
+        node.left=buildTree(inorder,inStart,inRoot-1,preorder,preStart+1,preStart+numLeft,mp);
+        node.right = buildTree(inorder,inRoot+1,inEnd,preorder,numLeft+preStart+1,preEnd,mp);
+        return node;
+
+    }
+}
