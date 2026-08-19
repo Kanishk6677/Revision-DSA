@@ -1,0 +1,80 @@
+Given a Binary Search Tree and two integers NODE1 and NODE2. You have to find the maximum element in the path from NODE1 to NODE2.
+
+A binary search tree (BST), also called an ordered or sorted binary tree, is a rooted binary tree whose internal nodes each store a key greater than all the keys in the node's left subtree and less than those in its right subtree.
+
+Note:
+
+1. The path from NODE1 to NODE2 does not include NODE1 and NODE2.
+
+2. NODE1 and NODE2 are unique.
+
+3. If there is no element in the path from NODE1 to NODE2, return -1.
+
+import java.util.* ;
+import java.io.*; 
+/*******************************************************
+ 
+	Following is the BinaryTreeNode class structure
+
+	class BinaryTreeNode<T> {
+		T data;
+		BinaryTreeNode<T> left;
+		BinaryTreeNode<T> right;
+		
+		public BinaryTreeNode(T data) {
+			this.data = data;
+		}
+	}
+
+**********************************************************/
+
+public class Solution {
+	public static boolean search(BinaryTreeNode<Integer> root, int target) {
+
+    while(root != null) {
+
+        if(root.data == target) {
+            return true;
+        }
+
+        if(target < root.data) {
+            root = root.left;
+        } else {
+            root = root.right;
+        }
+    }
+
+    return false;
+}
+	public static int findMaxElement(BinaryTreeNode<Integer> root, int node1, int node2) {
+		if(!search(root, node1) || !search(root, node2)) {
+    return -1;
+}
+		BinaryTreeNode<Integer> lca=root;
+		while(true){
+			if(node1<lca.data && node2<lca.data){
+				lca=lca.left;
+			}else if(node1>lca.data && node2>lca.data){
+				lca=lca.right;
+			} else break;
+		}
+		int ans =-1;
+		if(lca.data!=node1 && lca.data!=node2) ans=lca.data;
+		BinaryTreeNode<Integer> temp=lca;
+		while(temp.data!=node1){
+			temp=node1<temp.data?temp.left:temp.right;
+			if(temp.data!=node1){
+				ans=Math.max(ans,temp.data);
+			}
+		}
+		temp=lca;
+		while(temp.data!=node2){
+			temp=node2<temp.data?temp.left:temp.right;
+			if(temp.data!=node2){
+				ans=Math.max(ans,temp.data);
+			}
+			
+		}	
+		return ans;
+	}
+}
