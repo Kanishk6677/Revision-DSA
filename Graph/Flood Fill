@@ -1,0 +1,30 @@
+class Solution {
+    public void dfs(int sr,int sc,int [][]image,int color,int oldColor,int [][]ans,boolean [][]vis){
+        vis[sr][sc]=true;
+        //int oldColor=ans[sr][sc];
+        int n=ans.length;
+        int m=ans[0].length;
+        ans[sr][sc]=color;
+        int dr[]={-1,0,1,0};
+        int dc[]={0,1,0,-1};
+        for(int i=0;i<4;i++){
+            int nrow=sr+dr[i];
+            int ncol=sc+dc[i];
+            if(nrow>=0 && ncol>=0 && nrow<n&&ncol<m && vis[nrow][ncol]==false && image[nrow][ncol]==oldColor){
+                dfs(nrow,ncol,image,color,oldColor,ans,vis);
+            }
+        }
+    }
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        int oldColor=image[sr][sc];
+        int n = image.length;
+        int m = image[0].length;
+        int [][] ans = image;
+        boolean [][] vis = new boolean[n][m];
+        
+        dfs(sr,sc,image,color,oldColor,ans,vis);
+        return ans;
+        
+
+    }
+}
