@@ -1,0 +1,64 @@
+import java.util.* ;
+import java.io.*; 
+/*************************************************************
+
+	Following is the TreeNode class structure
+
+	class TreeNode
+	{
+		int val;
+		TreeNode left;
+		TreeNode right;
+
+		TreeNode(int val)
+		{
+			this.val = val;
+			this.left = null;
+			this.right = null;
+		}
+	}
+
+ *************************************************************/
+
+public class Solution
+{
+	public static TreeNode findLca(TreeNode root, int node1,int node2){
+		if(root==null) return root;
+		if(root.val==node1 || root.val==node2) return root;
+		TreeNode left=findLca(root.left,node1,node2);
+		TreeNode right=findLca(root.right,node1,node2);
+		if(left!=null && right!=null) return root;
+		if(left!=null) return left;
+		return right;
+	}
+	public static int distance(TreeNode root,int node){
+		if(root==null) return -1;
+		if(root.val==node) return 0;
+		int left = distance(root.left, node);
+ 		if (left != -1) {
+        return left + 1;
+    }
+		int right = distance(root.right, node);	
+
+		if (right != -1) {
+			return right + 1;
+		}
+
+    	return -1;
+
+
+	}
+	public static boolean exists(TreeNode root,int node){
+		if(root==null) return false;
+		if(root.val==node) return true;
+		return exists(root.left,node) || exists(root.right,node);
+	}
+	public static int findDistanceBetweenNodes(TreeNode root, int node1, int node2)
+	{
+		if(!exists(root,node1)||!exists(root,node2)) return -1;
+		TreeNode lca = findLca(root,node1,node2);
+		int d1=distance(lca,node1);
+		int d2=distance(lca,node2);
+		return d1+d2;
+	}
+}
