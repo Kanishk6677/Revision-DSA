@@ -1,0 +1,61 @@
+import java.util.*;
+
+class Pair {
+    int first;
+    int second;
+
+    public Pair(int first, int second) {
+        this.first = first;
+        this.second = second;
+    }
+}
+
+public class Solution {
+
+    public static boolean check(int src, int[][] edges, boolean[] vis) {
+
+        vis[src] = true;
+
+        Queue<Pair> q = new LinkedList<>();
+        q.offer(new Pair(src, -1));
+
+        while (!q.isEmpty()) {
+
+            Pair p = q.poll();
+
+            int node = p.first;
+            int parent = p.second;
+
+            for (int nb : edges[node]) {
+
+                if (!vis[nb]) {
+                    vis[nb] = true;
+                    q.offer(new Pair(nb, node));
+                } 
+                else if (nb != parent) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static String cycleDetection(int[][] edges, int n, int m) {
+
+        boolean[] vis = new boolean[n];
+
+        // Handle disconnected graph
+        for (int i = 0; i < n; i++) {
+
+            if (!vis[i]) {
+
+                if (check(i, edges, vis)) {
+                    return "true";
+                }
+            }
+        }
+
+        return "false";
+    }
+}
