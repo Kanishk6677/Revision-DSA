@@ -1,0 +1,55 @@
+public class Solution {
+
+    
+    public static boolean f1(
+            int src,
+            List<List<Integer>> adj,
+            boolean[] vis,int parent) {
+
+                vis[src]=true;
+                for(int nb:adj.get(src)){
+                    if(vis[nb]==false){
+                        vis[nb]=true;
+                       if( f1(nb,adj,vis,src)) return true;
+                    }else if(parent!=nb) return true;
+                }
+                return false;
+
+
+            }
+    public static String cycleDetection(int[][] edges, int n, int m) {
+
+        // Create adjacency list
+        List<List<Integer>> adj = new ArrayList<>();
+
+        // Vertices are 1 to N
+        for (int i = 0; i <= n; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        // Convert edge list to adjacency list
+        for (int[] edge : edges) {
+
+            int u = edge[0];
+            int v = edge[1];
+
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        boolean[] vis = new boolean[n + 1];
+
+        // Graph can be disconnected
+        for (int i = 1; i <= n; i++) {
+
+            if (!vis[i]) {
+
+                if (f1(i, adj, vis,-1)) {
+                    return "Yes";
+                }
+            }
+        }
+
+        return "No";
+    }
+}
