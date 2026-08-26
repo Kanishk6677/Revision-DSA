@@ -1,69 +1,66 @@
 class Solution {
-
-    public boolean canFill(int row, int col, List<char[]> board) {
-        int duprow = row;
-        int dupcol = col;
-        int n = board.size();
-
-        // check upper left diagonal
-        while (row >= 0 && col >= 0) {
-            if (board.get(row)[col] == 'Q') return false;
+    public boolean isSafe(int row,int col,char [][] board){
+        int drow=row;
+        int dcol=col;
+        int n =board.length;
+        // up
+        while(row>=0){
+            if(board[row][col]=='Q') return false;
+            row--;
+        }
+        row=drow;
+        col=dcol;
+        // left up diagonal
+        while(row>=0 && col>=0){
+            if(board[row][col]=='Q') return false;
             row--;
             col--;
         }
-
-        // check left same row
-        row = duprow;
-        col = dupcol;
-        while (col >= 0) {
-            if (board.get(row)[col] == 'Q') return false;
+        row=drow;
+        col=dcol;
+        // left same row
+        while(col>=0){
+             if(board[row][col]=='Q') return false;
+            
             col--;
         }
-
-        // check lower left diagonal
-        row = duprow;
-        col = dupcol;
+        // lower diagonal left
+        row = drow;
+        col = dcol;
         while (row < n && col >= 0) {
-            if (board.get(row)[col] == 'Q') return false;
+            if (board[row][col] == 'Q') return false;
             row++;
             col--;
         }
-
         return true;
+
+
     }
-
-    public void f(int col, List<char[]> board, List<List<String>> ans) {
-        int n = board.size();
-
+    public void f(int col,char [][] board , List<List<String>> ans){
+        int n= board.length;
         if(col==n){
-            List<String> temp = new ArrayList<>();
-            for(char[] row:board){
+            List<String>temp = new ArrayList<>();
+            for(char []row:board){
                 temp.add(new String(row));
             }
             ans.add(temp);
             return;
         }
-
-        for (int i = 0; i < n; i++) {
-            if (canFill(i, col, board)) {
-                board.get(i)[col] = 'Q';          // ← correct way to set
-                f(col + 1, board, ans);            // ← pass board too
-                board.get(i)[col] = '.';           // ← backtrack
+        for(int i=0;i<n;i++){
+            if(isSafe(i,col,board)){
+                board[i][col]='Q';
+                f(col+1,board,ans);
+                board[i][col]='.';
             }
         }
     }
-
     public List<List<String>> solveNQueens(int n) {
         List<List<String>> ans = new ArrayList<>();
-
-        List<char[]> board = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            char[] row = new char[n];
-            Arrays.fill(row, '.');                 // ← correct way to fill
-            board.add(row);
+        char [][] board = new char[n][n];
+        for(int i=0;i<n;i++){
+            Arrays.fill(board[i],'.');
         }
-
-        f(0, board, ans);
+        f(0,board,ans);
         return ans;
     }
 }
