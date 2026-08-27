@@ -1,0 +1,47 @@
+Problem statement
+You are given a two-dimensional array/list of integers consisting of 0s and 1s. In the list, 1 represents land and 0 represents water.
+
+The task is to find the number of distinct islands where a group of connected 1s(horizontally or vertically) forms an island.
+
+Note:
+Two islands are considered to be the same if and only if one island is equal to another(not rotated or reflected) i.e if we can translate one island on another without rotating or reflecting then it would be considered as the same islands. 
+
+
+
+import java.util.*;
+public class Solution 
+{
+	private static String toString(int r,int c){
+		return Integer.toString(r) + " " + Integer.toString(c);
+	}
+	public static void dfs(int row,int col,int [][]vis,int [][]arr,ArrayList<String> vec,int row0,int col0){
+		vis[row][col]=1;
+		vec.add(toString(row-row0,col-col0));
+		int n= arr.length;
+		int m = arr[0].length;
+		int dr[]={-1,0,1,0};
+		int dc[]={0,-1,0,1};
+		for(int i=0;i<4;i++){
+			int nr=row+dr[i];
+			int nc=col+dc[i];
+			if(nr>=0 && nr<n && nc>=0 && nc<m && vis[nr][nc]==0 && arr[nr][nc]==1){
+				dfs(nr,nc,vis,arr,vec,row0,col0);
+			}
+		}
+	}
+	public static int distinctIsland(int [][] arr, int n, int m) 
+	{
+		int vis[][]=new int [n][m];
+		HashSet<ArrayList<String>> st = new HashSet<>();
+		for(int i=0;i<n;i++){
+			for(int j=0;j<m;j++){
+				if(vis[i][j]==0 && arr[i][j]==1){
+					ArrayList<String> vec = new ArrayList<>();
+					dfs(i,j,vis,arr,vec,i,j);
+					st.add(vec);
+				}
+			}
+		}
+		return st.size();
+	}
+}
