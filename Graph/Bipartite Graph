@@ -1,0 +1,35 @@
+A graph is bipartite if the nodes can be partitioned into two independent sets A and B such that every edge in the graph connects a node in set A and a node in set B
+
+
+class Solution {
+    public boolean check(int src,int []color,int [][]graph){
+        int n=graph.length;
+        Queue<Integer> q = new LinkedList();
+        q.offer(src);
+        color[src]=0;
+        while(!q.isEmpty()){
+            int node=q.poll();
+            for(int adj:graph[node]){
+                if(color[adj]==-1){
+                    color[adj]=1-color[node];
+                    q.offer(adj);
+                } else if(color[adj]==color[node]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean isBipartite(int[][] graph) {
+        int n=graph.length;
+        int color[]=new int [n];
+        Arrays.fill(color,-1);
+       
+        for(int i=0;i<n;i++){
+            if(color[i]==-1){
+                if(check(i,color,graph)==false) return false;
+            }
+        }
+        return true;
+    }
+}
