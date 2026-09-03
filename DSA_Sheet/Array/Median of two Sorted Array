@@ -1,4 +1,4 @@
-TC-O(Log(min(n,m))
+TC-O((min(logn,logm))
 
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
