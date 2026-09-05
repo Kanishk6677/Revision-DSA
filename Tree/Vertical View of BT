@@ -1,63 +1,97 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
- class Tuple{
+class Tuple {
     TreeNode node;
-    int row;
-    int col;
-    public Tuple(TreeNode _node,int _row,int _col){
-        node=_node;
-        row=_row;
-        col=_col;
+    int vertical;
+    int level;
+
+    public Tuple(TreeNode node, int vertical, int level) {
+        this.node = node;
+        this.vertical = vertical;
+        this.level = level;
     }
- }
+}
+
 class Solution {
+
     public List<List<Integer>> verticalTraversal(TreeNode root) {
-        Queue<Tuple> q = new LinkedList<>();
-        TreeMap<Integer,TreeMap<Integer,PriorityQueue<Integer>>> map = new TreeMap<>();
-        q.offer(new Tuple(root,0,0));
-        while(!q.isEmpty()){
-            Tuple tuple = q.poll();
-            TreeNode node = tuple.node;
-            int x=tuple.row;
-            int y = tuple.col;
-            if(!map.containsKey(x)){
-                map.put(x,new TreeMap<>());
-            }
-            if(!map.get(x).containsKey(y)){
-                map.get(x).put(y,new PriorityQueue<>());
-            }
-            map.get(x).get(y).offer(node.val);
-            if(node.left!=null){
-                q.offer(new Tuple(node.left,x-1,y+1));
-            }
-            if(node.right!=null){
-                q.offer(new Tuple(node.right,x+1,y+1));
+
+        Queue<Tuple> queue = new LinkedList<>();
+
+        // vertical position
+        //     ↓
+        // TreeMap<vertical, TreeMap<level, PriorityQueue<node values>>>
+        TreeMap<Integer, TreeMap<Integer, PriorityQueue<Integer>>> map =
+                new TreeMap<>();
+
+        // Root is at vertical = 0, level = 0
+        queue.offer(new Tuple(root, 0, 0));
+
+        while (!queue.isEmpty()) {
+
+            Tuple current = queue.poll();
+
+            TreeNode node = current.node;
+            int vertical = current.vertical;
+            int level = current.level;
+
+            // If this vertical position doesn't exist,
+            // create a TreeMap for its levels.
+            if (!map.containsKey(vertical)) {
+                map.put(vertical, new TreeMap<>());
             }
 
-        }
-        List<List<Integer>> ans = new ArrayList<>();
-        for(TreeMap<Integer,PriorityQueue<Integer>>ys:map.values()){
-            ans.add(new ArrayList<>());
-            for(PriorityQueue<Integer> nodes:ys.values()){
-                while(!nodes.isEmpty()){
-                    ans.get(ans.size()-1).add(nodes.poll());
-                }
+            // If this level doesn't exist for this vertical position,
+            // create a PriorityQueue for the nodes.
+            if (!map.get(vertical).containsKey(level)) {
+                map.get(vertical).put(level, new PriorityQueue<>());
+            }
+
+            // Put node value into the PQ for this (vertical, level)
+            map.get(vertical)
+               .get(level)
+               .offer(node.val);
+
+            // Left child:
+            // vertical decreases by 1
+            // level increases by 1
+            if (node.left != null) {
+                queue.offer(
+                    new Tuple(node.left, vertical - 1, level + 1)
+                );
+            }
+
+            // Right child:
+            // vertical increases by 1
+            // level increases by 1
+            if (node.right != null) {
+                queue.offer(
+                    new Tuple(node.right, vertical + 1, level + 1)
+                );
             }
         }
-         return ans;
+
+        // Build final answer
+        List<List<Integer>> answer = new ArrayList<>();
+
+        // TreeMap automatically gives vertical positions
+        // from left to right.
+        for (TreeMap<Integer, PriorityQueue<Integer>> levels : map.values()) {
+
+            List<Integer> verticalColumn = new ArrayList<>();
+
+            // TreeMap automatically gives levels
+            // from top to bottom.
+            for (PriorityQueue<Integer> nodes : levels.values()) {
+
+                // Same (vertical, level) can have multiple nodes.
+                // PriorityQueue gives them in ascending order.
+                while (!nodes.isEmpty()) {
+                    verticalColumn.add(nodes.poll());
+                }
+            }
+
+            answer.add(verticalColumn);
+        }
+
+        return answer;
     }
-   
 }
