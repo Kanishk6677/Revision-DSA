@@ -1,0 +1,68 @@
+import java.util.*;
+/*************************************
+
+Following is the Point Class structure
+
+class Point {
+	int x;
+	int y;
+
+	Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}
+
+**************************************/
+class Triplet{
+	int distance;
+	int row;
+	int col;
+	public Triplet(int distance,int row,int col){
+		this.distance=distance;
+		this.row=row;
+		this.col=col;
+	}
+}
+public class Solution {
+	public static int shortestPathBinaryMatrix(int[][] matrix, Point srcc, Point destt) {
+		int n = matrix.length;
+		int m = matrix[0].length;
+		int dist[][]=new int[n][m];
+		int src=srcc.x;
+		int dest=srcc.y;
+		 int destRow = destt.x;
+    int destCol = destt.y;
+	if(src==destRow && dest==destCol) return 0;
+		for(int i=0;i<n;i++){
+			for(int j=0;j<m;j++){
+				dist[i][j]=(int)1e9;
+			}
+		}
+		dist[src][dest]=0;
+		Queue<Triplet>q=new LinkedList<>();
+		q.offer(new Triplet(0,src,dest));
+		while(!q.isEmpty()){
+			Triplet t=q.poll();
+			int d=t.distance;
+			int row=t.row;
+			int col=t.col;
+			int dr[]={-1,0,1,0};
+			int dc[]={0,1,0,-1};
+			if (row == destRow && col == destCol) {
+            return d;
+        }
+			for(int i=0;i<4;i++){
+				int nr=row+dr[i];
+				int nc=col+dc[i];
+				if(nr>=0 && nr<n && nc>=0 && nc<m && matrix[nr][nc]==1 && d+1<dist[nr][nc]){
+					dist[nr][nc]=d+1;
+					if(nr==destt.x && nc==destt.y) return dist[nr][nc];
+					q.offer(new Triplet(d+1,nr,nc));
+				}
+			}
+
+		}
+		return -1;
+	}
+}
