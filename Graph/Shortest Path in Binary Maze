@@ -31,9 +31,12 @@ public class Solution {
 		int dist[][]=new int[n][m];
 		int src=srcc.x;
 		int dest=srcc.y;
-		 int destRow = destt.x;
-    int destCol = destt.y;
-	if(src==destRow && dest==destCol) return 0;
+		int destRow = destt.x;
+    	int destCol = destt.y;
+		if (matrix[src][dest] == 0 || matrix[destRow][destCol] == 0) {
+    return -1;
+}
+		if(src==destRow && dest==destCol) return 0;
 		for(int i=0;i<n;i++){
 			for(int j=0;j<m;j++){
 				dist[i][j]=(int)1e9;
