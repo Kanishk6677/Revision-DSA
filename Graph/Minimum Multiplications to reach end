@@ -1,0 +1,35 @@
+class Pair{
+    int first;
+    int second;
+    public Pair(int first,int second){
+        this.first=first;
+        this.second=second;
+    }
+}
+class Solution {
+    public int minimumMultiplications(int[] arr, int start, int end) {
+       int n = arr.length;
+       int distance[]=new int[100000];
+       Arrays.fill(distance,(int)1e9);
+       distance[start]=0;
+       int mod=100000;
+       Queue<Pair> q = new LinkedList<>();
+       q.offer(new Pair(0,start));
+       while(!q.isEmpty()){
+        Pair p = q.poll();
+        int steps=p.first;
+        int node=p.second;
+        
+        for(int i=0;i<n;i++){
+           int num = (int)((long)arr[i] * node % mod);
+           if(steps+1<distance[num]){
+            distance[num]=steps+1;
+            if(num==end) return steps+1;
+            q.offer(new Pair(steps+1,num));
+           }
+        }
+
+       }
+       return -1;
+    }
+}
