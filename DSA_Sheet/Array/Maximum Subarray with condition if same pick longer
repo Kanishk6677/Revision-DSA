@@ -1,0 +1,53 @@
+import java.util.*;
+
+public class Solution {
+
+    public static ArrayList<Integer> maximumSubarray(
+            ArrayList<Integer> arr, int n) {
+
+        long currentSum = arr.get(0);
+        long bestSum = arr.get(0);
+
+        int start = 0;
+        int bestStart = 0;
+        int bestEnd = 0;
+
+        for (int i = 1; i < n; i++) {
+
+            // Should we start a new subarray?
+            if (arr.get(i) > currentSum + arr.get(i)) {
+                currentSum = arr.get(i);
+                start = i;
+            } else {
+                currentSum += arr.get(i);
+            }
+
+            // Better sum
+            if (currentSum > bestSum) {
+                bestSum = currentSum;
+                bestStart = start;
+                bestEnd = i;
+            }
+
+            // Same sum -> choose longer subarray
+            else if (currentSum == bestSum) {
+
+                int currentLength = i - start + 1;
+                int bestLength = bestEnd - bestStart + 1;
+
+                if (currentLength > bestLength) {
+                    bestStart = start;
+                    bestEnd = i;
+                }
+            }
+        }
+
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        for (int i = bestStart; i <= bestEnd; i++) {
+            ans.add(arr.get(i));
+        }
+
+        return ans;
+    }
+}
