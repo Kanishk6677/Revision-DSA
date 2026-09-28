@@ -1,0 +1,74 @@
+class Tuple {
+    int first;   // weight
+    int second;  // node
+    int third;   // parent
+
+    public Tuple(int first, int second, int third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
+    }
+}
+
+class Solution {
+    public int spanningTree(int v, int[][] edges) {
+
+        // Build adjacency list
+        ArrayList<ArrayList<Tuple>> adj = new ArrayList<>();
+
+        for (int i = 0; i < v; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int node = edge[1];
+            int wt = edge[2];
+
+            adj.get(u).add(new Tuple(wt, node, u));
+            adj.get(node).add(new Tuple(wt, u, node));
+        }
+
+        PriorityQueue<Tuple> pq =
+            new PriorityQueue<>((a, b) -> a.first - b.first);
+
+        int[] vis = new int[v];
+
+        // weight, node, parent
+        pq.offer(new Tuple(0, 0, -1));
+
+        int sum = 0;
+
+        while (!pq.isEmpty()) {
+
+            Tuple p = pq.poll();
+
+            int wt = p.first;
+            int node = p.second;
+            int parent = p.third;
+
+            // Already included in MST
+            if (vis[node] == 1) {
+                continue;
+            }
+
+            // Include this node
+           
+
+            // Explore neighbours
+            for (Tuple neighbour : adj.get(node)) {
+
+                int nextNode = neighbour.second;
+                int nextWt = neighbour.first;
+
+                if (vis[nextNode] == 0) {
+                    pq.offer(new Tuple(nextWt, nextNode, node));
+                }
+            }
+             vis[node] = 1;
+            sum += wt;
+        }
+
+        return sum;
+    }
+}
